@@ -1,0 +1,31 @@
+{
+  "name": "rotation-scheduler",
+  "version": "0.1.0",
+  "author": "Mel Green",
+  "description": "Library used to maintain an assignment rotation in Google Calendar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:mastermel/rotation-scheduler.git"
+  },
+  "scripts": {
+    "eslint": "eslint .",
+    "jest": "npm-run-all jest:reactlatest jest:react16.2 jest:react15 --print-name",
+    "prettier": "prettier --write \"**/*.js\"",
+    "test": "npm-run-all lint:commit lint:circular jest"
+  },
+  "devDependencies": {
+    "eslint": "~5.2.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-jest": "^21.18.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-promise": "^3.8.0",
+    "jest": "^23.4.1",
+    "prettier": "1.14.0"
+  },
+  "dependencies": {
+    "googleapis": "^27.0.0",
+    "moment": "^2.23.0"
+  }
+}
