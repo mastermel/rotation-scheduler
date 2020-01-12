@@ -1,4 +1,5 @@
 const { google } = require("googleapis");
+const moment = require('moment');
 
 const {
   loadAccess,
@@ -27,8 +28,8 @@ const onExistingNonMainItem = (existingName, { assignee, assignment }) => {
 
 const DEFAULT_PARAMS = {
   calendarId: '2u93jkvftsvcah95tu42fpr1os@group.calendar.google.com',
-  start: '2018-12-30',
-  end: '2019-12-29',
+  start: '2020-01-26',
+  end: '2022-12-25',
   intervalDays: 7,
   onExisting: () => {
     // Don't create another event
@@ -44,15 +45,15 @@ const MAIN_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Main",
   assignees: [
-    MEL,
-    PARENTS,
-    PARENTS,
-    PARENTS,
     JOHN,
     PARENTS,
     PARENTS,
     PARENTS,
     BACHELORS,
+    PARENTS,
+    PARENTS,
+    PARENTS,
+    MEL,
     PARENTS,
     PARENTS,
     PARENTS,
@@ -63,9 +64,9 @@ const BREAD_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Bread",
   assignees: [
-    MEL,
     JOHN,
     BACHELORS,
+    MEL,
   ],
   onExisting: onExistingNonMainItem,
 };
@@ -74,9 +75,9 @@ const VEGGIES_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Veggies",
   assignees: [
-    JOHN,
     BACHELORS,
     MEL,
+    JOHN,
   ],
   onExisting: onExistingNonMainItem,
 };
@@ -85,9 +86,9 @@ const DRINKS_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Drinks/Dessert",
   assignees: [
-    BACHELORS,
     MEL,
     JOHN,
+    BACHELORS,
   ],
   onExisting: onExistingNonMainItem,
 };
@@ -96,13 +97,18 @@ const DRINKS_PARAMS = {
 loadAccess(auth => {
   const api = google.calendar({ version: "v3", auth });
 
-  getParams(api, DRINKS_PARAMS).then(params => {
+  getParams(api, MAIN_PARAMS).then(params => {
     try {
       console.log(params)
 
       if (false) {
         console.log('Clearing all existing events')
-        clearAllEvents(api, params);
+        clearAllEvents(api,
+          {
+            ...params,
+            timeMin: moment(params.start).toISOString(),
+          }
+        );
         return;
       }
 
