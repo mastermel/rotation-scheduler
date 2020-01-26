@@ -28,16 +28,19 @@ const onExistingNonMainItem = (existingName, { assignee, assignment }) => {
 
 const DEFAULT_PARAMS = {
   calendarId: '2u93jkvftsvcah95tu42fpr1os@group.calendar.google.com',
-  start: '2020-01-26',
-  end: '2022-12-25',
+  start: '2020-02-02',
+  end: '2021-12-30',
   intervalDays: 7,
   onExisting: () => {
     // Don't create another event
     return null; 
   },
   shouldSkipDate: (day) => {
-    const thirdSunday = nthDayOfMonth(day, day.day(), 3);
-    return day.date() === thirdSunday.date();
+    const secondSunday = nthDayOfMonth(day, day.day(), 2),
+      fourthSunday = nthDayOfMonth(day, day.day(), 4);
+
+    return day.date() !== secondSunday.date() &&
+      day.date() !== fourthSunday.date();
   },
 };
 
@@ -45,18 +48,12 @@ const MAIN_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Main",
   assignees: [
-    JOHN,
-    PARENTS,
-    PARENTS,
     PARENTS,
     BACHELORS,
     PARENTS,
-    PARENTS,
-    PARENTS,
     MEL,
     PARENTS,
-    PARENTS,
-    PARENTS,
+    JOHN,
   ],
 };
 
@@ -64,9 +61,9 @@ const BREAD_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Bread",
   assignees: [
+    MEL,
     JOHN,
     BACHELORS,
-    MEL,
   ],
   onExisting: onExistingNonMainItem,
 };
@@ -75,9 +72,9 @@ const VEGGIES_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Veggies",
   assignees: [
+    JOHN,
     BACHELORS,
     MEL,
-    JOHN,
   ],
   onExisting: onExistingNonMainItem,
 };
@@ -86,9 +83,9 @@ const DRINKS_PARAMS = {
   ...DEFAULT_PARAMS,
   assignment: "Drinks/Dessert",
   assignees: [
+    BACHELORS,
     MEL,
     JOHN,
-    BACHELORS,
   ],
   onExisting: onExistingNonMainItem,
 };
@@ -97,7 +94,7 @@ const DRINKS_PARAMS = {
 loadAccess(auth => {
   const api = google.calendar({ version: "v3", auth });
 
-  getParams(api, MAIN_PARAMS).then(params => {
+  getParams(api, DRINKS_PARAMS).then(params => {
     try {
       console.log(params)
 
@@ -113,22 +110,7 @@ loadAccess(auth => {
       }
 
       generateSchedule(api, params).then(() => {
-        listEvents(api, {
-          maxResults: 40,
-          calendarId: params.calendarId,
-        }).then(events => {
-          if (events.length) {
-            console.log(`Showing ${events.length} upcoming events:`)
-            events.map((event, i) => {
-              const start = event.start.dateTime || event.start.date;
-              console.log(`${start} - ${event.summary}`);
-            });
-          } else {
-            console.log("No events found on this calendar.");
-          }
-
-          process.exit();
-        });
+        process.exit();
       });
     } catch(e) {
       console.log(`Encountered error: ${e}`)
